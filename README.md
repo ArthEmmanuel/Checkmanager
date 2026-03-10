@@ -26,15 +26,6 @@ CSS
 
 JavaScript
 
-# Estrutura do Projeto
-checkmanager/
-│
-├── index.html
-├── script.js
-├── style.css
-├── logo.png
-├── favicon.ico
-
 # Como Executar
 
 Baixe ou clone o repositório
