@@ -1,14 +1,14 @@
-CheckManager 
+# CheckManager 
 
 Sistema simples de gerenciamento de tarefas e checklists, desenvolvido para organizar atividades e acompanhar o progresso de processos de forma prática e intuitiva.
 
-Sobre o Projeto
+# Sobre o Projeto
 
 O CheckManager é uma aplicação web que permite criar e gerenciar checklists de tarefas. O objetivo é ajudar na organização de atividades, garantindo que cada etapa de um processo seja acompanhada e concluída corretamente.
 
 Este projeto foi desenvolvido com foco em simplicidade, organização e experiência do usuário.
 
-Funcionalidades
+# Funcionalidades
 
 Criar checklists de tarefas
 
@@ -18,7 +18,7 @@ Visualizar progresso das atividades
 
 Interface simples e intuitiva
 
-🛠️ Tecnologias Utilizadas
+# Tecnologias Utilizadas
 
 HTML
 
@@ -26,7 +26,7 @@ CSS
 
 JavaScript
 
-📂 Estrutura do Projeto
+# Estrutura do Projeto
 checkmanager/
 │
 ├── index.html
@@ -34,7 +34,8 @@ checkmanager/
 ├── style.css
 ├── logo.png
 ├── favicon.ico
-⚙️ Como Executar
+
+# Como Executar
 
 Baixe ou clone o repositório
 
@@ -42,10 +43,10 @@ Abra o arquivo index.html no navegador
 
 O sistema funcionará diretamente no navegador, sem necessidade de servidor.
 
-🎯 Objetivo
+# Objetivo
 
 Este projeto foi criado para praticar desenvolvimento web e criar uma ferramenta simples para organização de tarefas e checklists.
 
-👨‍💻 Autor
+Autor
 
 Arthur Emmanuel
