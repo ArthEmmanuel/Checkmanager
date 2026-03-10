@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CheckManager - Controle inteligente de estoque para o seu negócio. Organize, analise e cresça com eficiência." />
+  <meta name="author" content="Arthur Emmanuel" />
+
+  <title>CheckManager | Gestão de Estoque Inteligente</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.ico" />
+  <link rel="apple-touch-icon" href="favicon.ico" />
+
+  <!-- Fontes e Estilos -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- SEO e Open Graph -->
+  <meta property="og:title" content="CheckManager - Gestão de Estoque Inteligente" />
+  <meta property="og:description" content="Monitore, analise e otimize o seu estoque de forma simples e visual." />
+  <meta property="og:image" content="logo.png" />
+  <meta property="og:type" content="website" />
+
+</head>
+<body>
+  <header class="header">
+    <div class="container header-content">
+      <div class="logo-container">
+        <img src="logo.png" alt="Logo CheckManager" class="logo-img" />
+        <div class="logo-text">
+          <h1 class="logo-title">Check<span>Manager</span></h1>
+          <p class="motto">Estoque sob controle, negócios no topo.</p>
+        </div>
+      </div>
+      <div class="status-indicator" role="status">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>Sistema Local Ativo</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container dashboard">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" aria-label="Menu principal">
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="#dashboard" class="nav-link active" data-tab="dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+          <li><a href="#cadastro" class="nav-link" data-tab="cadastro"><i class="fas fa-boxes"></i> Cadastro</a></li>
+          <li><a href="#cadastro-rapido" class="nav-link" data-tab="cadastro-rapido"><i class="fas fa-barcode"></i> Cadastro Rápido</a></li>
+          <li><a href="#movimentos" class="nav-link" data-tab="movimentos"><i class="fas fa-exchange-alt"></i> Movimentações</a></li>
+          <li><a href="#graficos-financeiros" class="nav-link" data-tab="graficos-financeiros"><i class="fas fa-chart-bar"></i> Análise Financeira</a></li>
+          <li><a href="#graficos-mercado" class="nav-link" data-tab="graficos-mercado"><i class="fas fa-chart-pie"></i> Métricas de Mercado</a></li>
+          <li><a href="#graficos-performance" class="nav-link" data-tab="graficos-performance"><i class="fas fa-tachometer-alt"></i> Performance</a></li>
+          <li><a href="#relatorios" class="nav-link" data-tab="relatorios"><i class="fas fa-file-alt"></i> Relatórios</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- ÁREA DE CONTEÚDO -->
+    <section class="content-area">
+      <!-- DASHBOARD -->
+      <article class="card tab-content active" id="dashboard">
+        <header class="card-header">
+          <h2 class="card-title">Visão Geral do Estoque</h2>
+          <button id="refresh" class="btn btn-outline"><i class="fas fa-sync-alt"></i> Atualizar</button>
+        </header>
+
+        <section class="data-grid">
+          <div class="data-card"><div class="data-value" id="total-produtos">0</div><div class="data-label">Produtos Cadastrados</div></div>
+          <div class="data-card"><div class="data-value" id="baixo-estoque">0</div><div class="data-label">Itens em Alerta</div></div>
+          <div class="data-card"><div class="data-value" id="validade-proxima">0</div><div class="data-label">Validades Próximas</div></div>
+          <div class="data-card"><div class="data-value" id="valor-total">R$ 0,00</div><div class="data-label">Valor Total do Estoque</div></div>
+        </section>
+
+        <section class="alerts-section">
+          <h3>Alertas e Ações Necessárias</h3>
+          <div id="alertas-container" class="alertas-container"></div>
+        </section>
+      </article>
+
+      <!-- CADASTRO MANUAL -->
+      <article class="card tab-content" id="cadastro">
+        <header class="card-header">
+          <h2 class="card-title">Cadastrar Produto (Manual)</h2>
+        </header>
+
+        <form id="produto-form" autocomplete="off">
+          <!-- PRIMEIRA LINHA - 2 CAMPOS -->
+          <div class="form-row">
+            <div class="input-group">
+              <label for="nome" class="input-label">Nome do Produto *</label>
+              <input type="text" id="nome" class="input-field" required />
+            </div>
+            <div class="input-group">
+              <label for="categoria" class="input-label">Categoria</label>
+              <select id="categoria" class="input-field">
+                <option value="">Selecione uma categoria</option>
+                <option>Alimentos</option><option>Bebidas</option><option>Limpeza</option>
+                <option>Higiene</option><option>Eletrônicos</option><option>Vestuário</option><option>Outros</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- SEGUNDA LINHA - 2 CAMPOS -->
+          <div class="form-row">
+            <div class="input-group">
+              <label for="quantidade" class="input-label">Quantidade *</label>
+              <input type="number" id="quantidade" class="input-field" min="0" required />
+            </div>
+            <div class="input-group">
+              <label for="minimo" class="input-label">Estoque Mínimo</label>
+              <input type="number" id="minimo" class="input-field" min="0" />
+            </div>
+          </div>
+
+          <!-- TERCEIRA LINHA - 2 CAMPOS -->
+          <div class="form-row">
+            <div class="input-group">
+              <label for="preco" class="input-label">Preço Unitário (R$)</label>
+              <input type="number" id="preco" class="input-field" min="0" step="0.01" />
+            </div>
+            <div class="input-group">
+              <label for="custo" class="input-label">Custo Unitário (R$)</label>
+              <input type="number" id="custo" class="input-field" min="0" step="0.01" />
+            </div>
+          </div>
+
+          <!-- QUARTA LINHA - 2 CAMPOS -->
+          <div class="form-row">
+            <div class="input-group">
+              <label for="validade" class="input-label">Data de Validade</label>
+              <input type="date" id="validade" class="input-field" />
+            </div>
+            <div class="input-group">
+              <label for="fornecedor" class="input-label">Fornecedor</label>
+              <input type="text" id="fornecedor" class="input-field" placeholder="Nome do fornecedor" />
+            </div>
+          </div>
+
+          <!-- DESCRIÇÃO (ÚNICO CAMPO) -->
+          <div class="input-group">
+            <label for="descricao" class="input-label">Descrição</label>
+            <textarea id="descricao" class="input-field textarea-field" rows="3"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Salvar Produto</button>
+        </form>
+
+        <section class="products-section">
+          <header class="table-header">
+            <h3 class="table-title">📦 Produtos Cadastrados</h3>
+            <div class="table-filters">
+              <select class="filter-select" id="filter-categoria">
+                <option value="">Todas as categorias</option>
+                <option>Alimentos</option><option>Bebidas</option><option>Limpeza</option>
+                <option>Higiene</option><option>Eletrônicos</option><option>Vestuário</option><option>Outros</option>
+              </select>
+              <select class="filter-select" id="filter-estoque">
+                <option value="">Todo estoque</option>
+                <option value="normal">Estoque Normal</option>
+                <option value="baixo">Estoque Baixo</option>
+                <option value="zero">Sem Estoque</option>
+              </select>
+            </div>
+          </header>
+
+          <div class="table-container">
+            <table id="produtos-table" class="products-table display">
+              <thead>
+                <tr>
+                  <th>Produto</th><th>Categoria</th><th>Estoque</th>
+                  <th>Preço</th><th>Custo</th><th>Validade</th><th>Ações</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <div class="table-summary">
+            <div class="summary-card">
+              <span>Total: <strong id="total-produtos-count">0</strong> produtos</span>
+              <div class="summary-status">
+                <span class="status-normal">● <span id="count-normal">0</span> Normal</span>
+                <span class="status-baixo">● <span id="count-baixo">0</span> Baixo</span>
+                <span class="status-zero">● <span id="count-zero">0</span> Sem estoque</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button id="importar-produtos" class="btn btn-outline">
+              <i class="fas fa-file-import"></i> Importar CSV
+            </button>
+            <input type="file" id="csv-file-input" accept=".csv,.txt" style="display: none;">
+            <button id="exportar-produtos" class="btn btn-outline">
+              <i class="fas fa-file-export"></i> Exportar Produtos
+            </button>
+            <button id="limpar-produtos" class="btn btn-danger">
+              <i class="fas fa-trash"></i> Limpar Todos
+            </button>
+          </div>
+        </section>
+      </article>
+
+      <!-- CADASTRO RÁPIDO POR CÓDIGO DE BARRAS -->
+      <article class="card tab-content" id="cadastro-rapido">
+        <header class="card-header">
+          <h2 class="card-title">
+            <i class="fas fa-bolt"></i> Cadastro Rápido por Código de Barras
+          </h2>
+          <div class="scanner-status">
+            <div class="status-indicator" id="leitor-status" style="background: #e74c3c; color: white;">
+              🔴 Inativo - Posicione o cursor no campo abaixo
+            </div>
+          </div>
+        </header>
+
+        <div class="quick-registration-section">
+          <div class="scanner-guide">
+            <h3 style="color: var(--primary); margin-bottom: 15px;">
+              <i class="fas fa-info-circle"></i> Como usar:
+            </h3>
+            <div class="guide-steps">
+              <div class="guide-step">
+                <span class="step-number">1</span>
+                <span>Posicione o cursor no campo "Código de Barras"</span>
+              </div>
+              <div class="guide-step">
+                <span class="step-number">2</span>
+                <span>Escaneie ou digite o código EAN-13</span>
+              </div>
+              <div class="guide-step">
+                <span class="step-number">3</span>
+                <span>O sistema preencherá automaticamente</span>
+              </div>
+              <div class="guide-step">
+                <span class="step-number">4</span>
+                <span>Confirme e cadastre o produto</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="quick-form">
+            <div class="form-row">
+              <div class="input-group" style="flex: 2;">
+                <label for="quick-codigo-barras" class="input-label">
+                  <i class="fas fa-barcode"></i> Código de Barras *
+                </label>
+                <input type="text" id="quick-codigo-barras" class="input-field" 
+                       placeholder="Digite ou escaneie o código (EAN-13)" 
+                       style="font-family: monospace; font-size: 1.1rem;" />
+                <div class="input-hint">
+                  💡 O código será processado automaticamente quando completo
+                </div>
+              </div>
+            </div>
+
+            <div id="quick-loading" class="loading-section" style="display: none;">
+              <div class="loading-spinner"></div>
+              <p>Processando código de barras...</p>
+            </div>
+
+            <div id="quick-product-info" class="product-info-section" style="display: none;">
+              <div class="form-row">
+                <div class="input-group" style="flex: 2;">
+                  <label for="quick-nome" class="input-label">Nome do Produto *</label>
+                  <input type="text" id="quick-nome" class="input-field" required />
+                </div>
+                <div class="input-group">
+                  <label for="quick-categoria" class="input-label">Categoria *</label>
+                  <select id="quick-categoria" class="input-field" required>
+                    <option value="">Selecione...</option>
+                    <option value="Alimentos">Alimentos</option>
+                    <option value="Bebidas">Bebidas</option>
+                    <option value="Limpeza">Limpeza</option>
+                    <option value="Higiene">Higiene</option>
+                    <option value="Eletrônicos">Eletrônicos</option>
+                    <option value="Vestuário">Vestuário</option>
+                    <option value="Outros">Outros</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="input-group">
+                  <label for="quick-quantidade" class="input-label">Quantidade *</label>
+                  <input type="number" id="quick-quantidade" class="input-field" value="1" min="1" required />
+                </div>
+                <div class="input-group">
+                  <label for="quick-minimo" class="input-label">Estoque Mínimo</label>
+                  <input type="number" id="quick-minimo" class="input-field" value="5" min="0" />
+                </div>
+                <div class="input-group">
+                  <label for="quick-preco" class="input-label">Preço (R$) *</label>
+                  <input type="number" id="quick-preco" class="input-field" step="0.01" min="0" required />
+                </div>
+                <div class="input-group">
+                  <label for="quick-custo" class="input-label">Custo (R$)</label>
+                  <input type="number" id="quick-custo" class="input-field" step="0.01" min="0" />
+                </div>
+              </div>
+
+              <div class="action-buttons">
+                <button id="btn-cadastro-rapido" class="btn btn-primary">
+                  <i class="fas fa-check"></i> Cadastrar Produto
+                </button>
+                <button id="btn-cancelar-rapido" class="btn btn-outline">
+                  <i class="fas fa-times"></i> Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="recent-products">
+            <h3 style="color: var(--primary); margin: 30px 0 15px 0;">
+              <i class="fas fa-history"></i> Últimos Produtos Cadastrados
+            </h3>
+            <div id="recent-products-list" class="recent-list">
+              <!-- Lista de produtos recentes será preenchida via JavaScript -->
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- MOVIMENTAÇÕES -->
+      <article class="card tab-content" id="movimentos">
+        <header class="card-header">
+          <h2 class="card-title">Registrar Movimentação</h2>
+        </header>
+
+        <form id="mov-form" autocomplete="off">
+          <div class="form-row">
+            <div class="input-group">
+              <label for="produto-select" class="input-label">Produto *</label>
+              <select id="produto-select" class="input-field" required>
+                <option value="">Selecione um produto</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="tipo" class="input-label">Tipo *</label>
+              <select id="tipo" class="input-field" required>
+                <option value="entrada">Entrada</option>
+                <option value="saida">Saída</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <label for="qtd-mov" class="input-label">Quantidade *</label>
+              <input type="number" id="qtd-mov" class="input-field" min="1" required />
+            </div>
+            <div class="input-group">
+              <label for="motivo" class="input-label">Motivo</label>
+              <input type="text" id="motivo" class="input-field" placeholder="Ex: Compra, Venda, Ajuste" />
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Registrar Movimentação</button>
+        </form>
+
+        <section class="movimentos-section">
+          <h3>Histórico de Movimentações</h3>
+          <div class="table-container">
+            <table id="movimentos-table" class="display">
+              <thead>
+                <tr><th>Data</th><th>Produto</th><th>Tipo</th><th>Quantidade</th><th>Motivo</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <div class="action-buttons">
+            <button id="exportar-movimentos" class="btn btn-outline"><i class="fas fa-file-export"></i> Exportar Movimentos</button>
+            <button id="limpar-movimentos" class="btn btn-danger"><i class="fas fa-trash"></i> Limpar Histórico</button>
+          </div>
+        </section>
+      </article>
+
+      <!-- GRÁFICOS FINANCEIROS -->
+      <article class="card tab-content" id="graficos-financeiros">
+        <header class="card-header">
+          <h2 class="card-title">Análise Financeira</h2>
+          <button id="refresh-financeiro" class="btn btn-outline"><i class="fas fa-sync-alt"></i> Atualizar</button>
+        </header>
+        <div class="charts-container" id="financial-charts">
+          <!-- Os gráficos serão renderizados aqui pelo JavaScript -->
+        </div>
+      </article>
+
+      <!-- GRÁFICOS MERCADO -->
+      <article class="card tab-content" id="graficos-mercado">
+        <header class="card-header">
+          <h2 class="card-title">Métricas de Mercado</h2>
+          <button id="refresh-mercado" class="btn btn-outline"><i class="fas fa-sync-alt"></i> Atualizar</button>
+        </header>
+        <div class="charts-container" id="market-charts">
+          <!-- Os gráficos serão renderizados aqui pelo JavaScript -->
+        </div>
+      </article>
+
+      <!-- GRÁFICOS PERFORMANCE -->
+      <article class="card tab-content" id="graficos-performance">
+        <header class="card-header">
+          <h2 class="card-title">Performance</h2>
+          <button id="refresh-performance" class="btn btn-outline"><i class="fas fa-sync-alt"></i> Atualizar</button>
+        </header>
+        <div class="charts-container" id="performance-charts">
+          <!-- Os gráficos serão renderizados aqui pelo JavaScript -->
+        </div>
+      </article>
+
+      <!-- RELATÓRIOS -->
+      <article class="card tab-content" id="relatorios">
+        <header class="card-header">
+          <h2 class="card-title">Relatórios</h2>
+          <div class="action-buttons">
+            <button id="gerar-relatorio-completo" class="btn btn-primary">
+                <i class="fas fa-file-pdf"></i> Gerar PDF
+            </button>
+            <button id="exportar-relatorios" class="btn btn-outline">
+                <i class="fas fa-file-excel"></i> Exportar CSV Completo
+            </button>
+            <button id="imprimir-relatorio" class="btn btn-outline">
+                <i class="fas fa-print"></i> Imprimir
+            </button>
+          </div>
+        </header>
+        <div class="reports-container">
+          <div class="report-section">
+            <h3>Scorecard Financeiro</h3>
+            <div id="scorecard-financeiro" class="scorecard-container"></div>
+          </div>
+          <div class="report-section">
+            <h3>Indicadores de Performance</h3>
+            <div id="indicadores-performance" class="indicadores-container"></div>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 <strong>CheckManager</strong> — Desenvolvido por Arthur Emmanuel</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <script src="script.js" defer></script>
+</body>
+</html>
